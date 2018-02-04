@@ -1,0 +1,52 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\title{INTRODUCCIÓN A ROS}
+\author{Héctor Mauricio Yepez Ponce}
+
+\begin{document}
+
+\maketitle
+
+La investigacion académica e industrial en el desarrallo de diferentes tipos de robots, la exigencia y flexibilidad que éstos deben poseer a obligado al desarrollo de lo que hoy se conoce como \textbf{MRS} (Multi-Robot Systems). Los sistemas MRS son plataformas que permiten la implementación de varios robots en una tarea conjunta, existen diferentes plataformas que se dedican a cierto tipo de robots y una de ellas es  ROS.
+Ros en pocos años se convirtió en un sistema pionero en MRS que ha crecido de manera exponencial, con mas de 3000 paquetes de aplicaciones y utilizado en casi 60 paltaformas robóticas industriales y de investigación con una realimentación continua por múltiples investigadores y fanáticos de la robótica que buscan mejorar o crear nuevas opciones.
+
+A pesar que su nombre es la sigla para sistema operativo, en realidad ROS es un meta-sistema operativo ya que es un sistema operativo que se instala sobre otro. Lo más usual es que sea un sistema UNIX (Ubuntu, Debian). Por lotanto es de código abierto mantenido por la Open Source Robotics Foundation (OSRF). 
+Incluyendo las abstracciones de hardware, control de dispositivos a bajo nivel, implementación de utilidades comunes, paso de mensajes entre procesos y gestión de paquetes. También proporciona herramientas y librerías para obtener, compilar, escribir y ejecutar código a través de múltiples ordenadores.
+
+ROS fue originalmente desarrollado en 2007 por el Laboratorio de Inteligencia Artificial de Stanford (SAIL) con el soporte del proyecto Standfor AI Robot. En febrero de 2013, ROS se transfirió a la Open Source Robotics Foundation.
+ROS está liberada bajo los términos de la licencia BSD (Berkeley Software Distribution) y un software open source, gratuito para el uso comercial, investigación y promoviendo la reutilización de codigo. 
+El objetivo de este sistema operativo es simplificar la tarea de crear cualquier robot imaginable, entregar facilidades para darles funcionalidades y hacerlos robustos y maleables mediante una serie de bibliotecas, drivers y herramientas que como parte de un MRS, le apuestan a la modularidad para ayudar a los 
+desarrolladores.
+\subsection{Obejetivo}
+El objetivo de este sistema operativo es simplificar la tarea de crear cualquier robot imaginable, entregar facilidades para darles funcionalidades y hacerlos robustos y maleables mediante una serie de bibliotecas, drivers y herramientas que como parte de un MRS, le apuestan a la modularidad para ayudar a los 
+desarrolladores.
+\subsection{Características}
+\begin{itemize}
+\item Le apuesta por la modularidad (diferentes áreas que se conjugan en un proyecto). 
+\item En ROS cada módulo es autónomo (como las computadoras en una red LAN).
+\item Cada módulo interactúa entre sí por medio de mensajes (protocolo XML-RCP) esto hace posible la programación en diferentes lenguajes C++ Python Java. 
+\item Hace uso del protocolo TCP/IP para un esquema cliente-servidor principal servidor es el núcleo de ROS. 
+\end{itemize}
+\subsection{Componentes}
+\subsubsection{Master}
+El ROS Master proporciona el registro de nombre y consulta el resto del grafo de computación. Sin el maestro, los nodos no serían capaces de encontrar al resto de nodos, intercambiar mensajes o invocar servicios.
+\subsubsection{Nodos}
+Los nodos son procesos que realizan la computación. ROS está diseñado para ser modular en una escala de grano fino; un sistema de control de robots comprende por lo general muchos nodos. Un nodo de ROS se escribe con el uso de las librerías cliente de ROS, roscpp (C++) y rospy (Phyton).
+\subsubsection{Servidor}
+El servidor de parámetros permite almacenar datos mediante un clave en una localización central, actualmente es parte de Master.
+\subsubsection{Mensajes}
+Los nodos se comunican mediante el paso de mensajes. Un mensaje es una estructura de datos compuestos. 
+\subsubsection{Topicos}
+Un nodo envía mensajes publicando en un tópico. El tópico es un nombre que se usa para identificar el contenido del mensajes. 
+\subsubsection{Servicios}
+La petición y respuesta se realiza a través de los servicios, que se definen a partir de una estructura de mensajes: una para la petición y otra para la respuesta. Un nodo proporciona un servicio con un nombre y un cliente utiliza dicho servicio mediante el envío del mensaje de petición y espera a la respuesta.
+\subsubsection{Bolsas} 
+Las bolsas es un formato para guardar y reproducir de nuevo mensajes de ROS. Las bolsas son un mecanismo importante para el almacenamiento de datos, como lecturas de sensores, que pueden ser difícilmente adquiridas pero son necesarias para el desarrollo y testeo de algoritmos.
+
+\end{document}\grid
+
