@@ -1,0 +1,105 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[left=3cm,right=3cm,top=2cm,bottom=2cm]{geometry}
+\author{Héctor Mauricio Yepez Ponce}
+\title{INSTALACIÓN ROS}
+\begin{document}
+\maketitle
+
+Para la instalación de Ros hay que tomar en cuenta la versión de Ubuntu que se tiene instalada en el ordenador:
+\begin{itemize}
+\item ROS INDIGO: Compatible con Saucy (13.10) y Trusty (14.04)  y paquetes de Debian. 
+\item ROS KINETIC: Es compatible con Wily (Ubuntu 15.10), Xenial (Ubuntu 16.04) y Jessie (Debian 8) para paquetes Debian.
+\item ROS Lunar: está dirigido principalmente a la versión Ubuntu 17.04 (Zesty), aunque otros sistemas Linux, así como Mac OS X, Android y Windows.
+\end{itemize}
+En este caso el sistema operativo es UBUNTU 16.04 LTS por lo que se utilizará el paquete ROS KINETIC.
+
+\begin{center}
+\textbf{Pasos para instalar ROS}
+\end{center}
+
+\begin{enumerate}
+\item Configurar la computadora para aceptar paquetes ROS desde la página oficial.
+\\\\
+\textit{sudo sh -c 'echo``deb http://packages.ros.org/ros/ubuntu \$ (lsb\_release -sc) main"$>$ /etc/apt/sources.list.d/ros-latest.list'}
+
+
+\item Configuración de KEYS.- Sirve para conectarse al servidor por medio de claves.\\\\
+\textit{sudo apt-key adv --keyserver hkp: //ha.pool.sks-keyservers.net: 80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116}
+
+\item Para la instalación de KINETIC ROS se debe mantener actualizado el sistema operativo:\\\\
+\textit{sudo apt-get update}
+
+\item El siguiente comando es utilizado para la instalación del paquete completo de KINETIC ROS.\\\\
+\textit{sudo apt-get install ros-kinetic-desktop-full}
+
+
+\item Una vez que se instala el paquete ROS es necesario inicializar rosdep que permite instalar las dependencias del sistema para la fuente que se desea compilar y ejecutar algunos componentes principales de ROS se lo ejecuta una única vez:\\\\
+\textit{sudo rosdep init}\\
+\textit{rosdep update}
+ 
+\item El siguiente paso es configurar el ambiente de ROS que se agregaran automáticamente a la sesión de bash, esto permite la interacción en un entorno no gráfico.\\\\
+\textit{echo ``source /opt/ros/kinetic/setup.bash" \guillemotright \textasciitilde{}/.bashrc}
+\\ 
+\textit{source \textasciitilde{}/.bashrc}
+\\
+\textit{source /opt/ros/kinetic/setup.bash}
+\\
+\item Para la instalación del denominado rosinstall, que es una herramienta que permite interactuar con el código del área de trabajo por medio de líneas de comandos.
+\\\\
+sudo apt-get install python-rosinstall python-rosinstall-generator python-wstool build-essential
+\item El ultimo paso es la verificación se lo realiza mediante el comando:
+\\\\
+\textit{printenv $|$ grep ROS}
+\item Crear un espacio de trabajo ROS.-
+Se crea una carpeta en la que se modifica, construye e instalan los paquetes. Catkin es el sistema de compilación de ROS y combina CMake y scripts de Phyton. Para una mejor distribución de paquetes y mejor compilación cruzada.
+\\\\
+\textit{mkdir -p \textasciitilde / catkin\_ws/src}
+\\
+\textit{cd \textasciitilde /catkin\_ws/src}
+\\
+\textit{catkin\_init\_workspace}
+\\
+\textit{cd \textasciitilde/catkin\_ws/}
+\\
+\textit{catkin\_make}
+\end{enumerate}
+
+\begin{center}
+\textbf{Diferentes comandos principales en ROS}
+\end{center}
+\begin{itemize}
+\item \textit{rospack.-} Permite obtener información sobre paquetes
+\\\\
+\textit{rospack find [nombre del paquete]}
+\item \textit{roscd.-} Lo llevará a la carpeta donde ROS almacena los archivos de registro. Tenga en cuenta que si aún no ha ejecutado ningún programa ROS.
+\\\\
+\textit{roscd [nombre de ubicación [/ subdir]]}
+\item \textit{rosls.-} Es parte de la suite rosbash. Le permite ls directamente en un paquete por nombre y no por ruta absoluta.
+\\\\
+\textit{rosls [nombre de ubicación [/ subdir]}
+\item\textit{roscore.-}Para la ejecución de cualquier paquete de ROS es necesario llamar al parámetro del nodo Master con la instrucción en un terminal.
+\item\textit{rosnode list .-} Muestra la información sobre nodos de ROS  que se están ejecutado en ese momento y que se encuentran activos.
+\item\textit{Rosrun.-} Permite usar el nombre de un paquete y ejecutarlo directamente.
+\\\\
+\textit{rosrun [package\_name] [node\_name]}
+\item\textit{rostopic.-} Permite obtener la información de los topics de ROS.
+\item\textit{rostopic echo.-} Muestra los datos publicados sobre un topic.
+\\\\
+\textit{rostopic echo [topic]}
+\item\textit{rqt\_plot.-} Muestra un gráfico de tiempo de desplazamiento de los datos publicados en los topics.
+\\\\
+\textit{rosrun rqt\_plot rqt\_plot}
+\item\textit{ROS Services.-}Servicios son una manera que les permite comunicarse a los nodos unos con otros. Servicios permiten que los nodos envíen una solicitud y reciban una respuesta. 
+\\\\
+\textit{rosservice list} 
+\item\textit{Rosparam.-} Permite almacenar y manipular datos en el servidor. El servidor de parámetros puede alamacenar enteros, flotantes, booleanos y listas.
+
+\end{itemize}
+
+\end{document}\grid
+\grid
