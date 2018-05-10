@@ -1,0 +1,156 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{graphicx}
+\author{Hector Mauricio Yepez Ponce}
+\date{11 de marzo de 2018}
+\title{Instalación Turtleboot}
+\begin{document}
+\maketitle
+Para la instalación de librerías con las que funciona el turtleboot se debe previamente instalar ROS (hydro, indigo, kinetic, lunar, etc) en el computador que se encuentran en la pagina oficial de ROS \textbf{http://www.ros.org/}, inicialmente se instalo Ubuntu 16.04 LTS compatible con ROS Kinetic pero las librerias del turtleboot no estan actualizadas por lo que en un futuro puede presentar errores si se desea añadir sensores, es por eso que se decidió instalar la version Ubuntu 14.04 LTS de 64 bits y se procedió a la instalación siguiendo los pasos que a acontinuación se detalla:
+
+\begin{itemize}
+\item {\textbf{Instalación de paquetes Ubuntu }}
+\begin{itemize}
+\item sudo apt-get install ros-indigo-turtlebot ros-indigo-turtlebot-apps ros-indigo-turtlebot-interactions ros-indigo-turtlebot-simulator ros-indigo-kobuki-ftdi ros-indigo-rocon-remocon ros-indigo-rocon-qt-library ros-indigo-ar-track-alvar-msgs
+\end{itemize}
+
+\item {\textbf{Preparación}}
+\begin{itemize}
+\item sudo apt-get install python-rosdep python-wstool ros-indigo-ros
+\item sudo rosdep init
+\item rosdep update
+\end{itemize}
+
+\item {\textbf{Workspaces}}
+\begin{itemize}
+\item mkdir \textasciitilde/rocon
+\item sudo rosdep init
+\item rosdep update
+\item cd \textasciitilde/rocon \item wstool init -j5 src https://raw.github.com/robotics-in-concert\\/rocon/release/indigo/rocon.rosinstall
+\item source /opt/ros/indigo/setup.bash
+\item rosdep install $--$from-paths src -i -y
+\item catkin\_make\\
+\item mkdir ~/kobuki
+\item cd ~/kobuki
+\item wstool init src -j5  \item https://raw.github.com/yujinrobot/yujin\_tools/master/rosinstalls/indigo/\\kobuki.rosinstall
+\item source \textasciitilde/rocon/devel/setup.bash
+\item rosdep install $--$from-paths src -i -y
+\item catkin\_make\\
+\item mkdir \textasciitilde/turtlebot
+\item cd \verb'~'/turtlebot
+\item wstool init src -j5 \item https://raw.github.com/yujinrobot/yujin\_tools/master/rosinstalls/indigo/\\turtlebot.rosinstall
+\item source \textasciitilde/kobuki/devel/setup.bash
+\item rosdep install $--$from-paths src -i -y
+\item catkin\_make
+\end{itemize}
+
+\item \textbf{Configurar el ambiente}
+
+\begin{itemize}
+\item echo "source /opt/ros/indigo/setup.bash" $>>$ \textasciitilde/.bashrc
+\item echo "source ~/turtlebot/devel/setup.bash" $>>$ \textasciitilde/.bashrc
+\end{itemize}
+\end{itemize}
+
+Una vez que se ha completado la instación de ROS y de Turtleboot en las dos computadoras, se mostrará los para para comunicar la PC de trabajo al ordenador que porta el robot, ejecutar el nodelet principal que activa todos los nodos de comunicación del hardware del robot, como teleoperar el robot con el teclado de nuestro PC.
+
+\begin{itemize}
+\item \textbf{Comunicación PC de trabajo/ PC del robot}\\
+Para ello lanzaremos el ROS y sus comandos de forma telematica con nuestro PC a través de
+SHH en Ubuntu. Para ello debemos crear una red LAN inalámbrica propia a la que deber 
+conectado el robot y el PC con el que se que vaya a a trabajar. Por lo tanto, necesitaremos un
+router WiFi para crear la red.\\
+Es necesario instalar SHH server en los dos ordenadores para ello abrimos el terminal y ejecutamos el siguiente comando:
+\begin{itemize}
+\item sudo apt-get install openssh-server
+\end{itemize}
+Procedemos averiguar las direcciones IP tanto del PC de trabajo y PC del turtleboot, que permitirá la comunicación entre ambos dispositivos. Para ello ingresamos en la opción conexiones, información de conexión.
+
+\begin{center}
+\includegraphics[width=6cm,height=7cm]{informacion.jpg}
+\end{center}
+
+Una vez obtenida la información se ingresa a editar conexiones y seleccionamos la red inalámbrica a la cual estamos conectados y presionamos en la opción editar.
+
+\begin{center}
+\includegraphics[width=12cm,height=7cm]{conexion.jpg}
+\end{center}
+
+Una vez allí escogemos la pestaña de Ajuste de IPv4, en método seleccionamos Manual y acontinuación llenamos los campos con la dirección IP para cada dispositivo, guiandonos de la información de conexiones que tenemos desplegada, IP que da acceso a nuestro Router WiFi y en servidor DNS escribimos 8.8.8.8 por ejemplo, aunque en nuestra red no tengamos acceso a Internet, solamente será una conexión inalámbrica por último, clickamos en Guardar. Esto se debe hacer en cada dispositivo.
+
+\begin{center}
+\includegraphics[width=12cm,height=7cm]{red.jpg}
+\end{center}
+
+Ya instalado el SHH server en cada uno de los dispositivos y conectados a la misma red se debera ejecutar el siguiente comando en el terminal de la PC de trabajo.
+\begin{itemize}
+\item ssh turtle@$<$TURTLEBOTP\_IP$>$\\
+Donde \textit{turtle} es el nombre de usuario de Ubuntu en la PC del robot, en este caso es \textbf{kobuki} y finalmente la dirección IP de la misma que es \textbf{192.168.0.107}, quedando de la siguiente manera.
+\item ssh kobuki@192.168.0.107
+\end{itemize}
+Si todo esta bien pedirá la contraseña de la PC del robot, y una vez introducida la contraseña, la ventana del terminal del PC de trabajo se mostrará como si fuera la PC del robot y todo lo que ahi se ejecute será como si se estuviera ejecutando en la PC del robot directamente.
+
+Con la conexión establecida en el terminal de la PC del robot escribimos lo siguiente:
+\begin{itemize}
+\item echo export ROS\_MASTER\_URI=http://localhost:11311 $>>$ \textasciitilde/.bashrc
+\item echo export ROS\_HOSTNAME=IP\_OF\_TURTLEBOT $>>$ \textasciitilde/.bashrc
+\item echo export ROS\_MASTER\_URI=http://IP\_OF\_TURTLEBOT:11311 $>>$ \textasciitilde/turtlebot/devel/setup.sh
+\item echo export ROS\_HOSTNAME=IP\_OF\_TURTLEBOT $>>$ \textasciitilde/turtlebot/devel/setup.sh
+\end{itemize}
+Y en \textit{IP\_OF\_TURTLEBOT} se reemplaza  por 192.168.0.107 que es la IP de nuestra PC del robot, quedaría de la siguiente manera:
+\begin{itemize}
+\item echo export ROS\_HOSTNAME=192.168.0.107 $>>$ \textasciitilde/.bashrc
+\item echo export ROS\_MASTER\_URI=http://192.168.0.107:11311 $>>$ \textasciitilde/turtlebot/devel/setup.sh
+\item echo export ROS\_HOSTNAME=192.168.0.107 $>>$ \textasciitilde/turtlebot/devel/setup.sh
+\end{itemize}
+Abrimos un terminal en la PC de trabajo y escribimos los siguiente comandos:
+\begin{itemize}
+\item echo export ROS\_MASTER\_URI=http://IP\_OF\_TURTLEBOT:11311 $>>$ \textasciitilde/.bashrc
+\item echo export ROS\_HOSTNAME=IP\_OF\_PC $>>$ \textasciitilde/.bashrc
+\end{itemize}
+De la misma manera en \textit{IP\_OF\_PC} se reemplaza por la IP de la PC  de trabajo en este caso \textbf{192.168.0.108}, quedaria de la siguiente manera:
+\begin{itemize}
+\item echo export ROS\_MASTER\_URI=http://192.168.0.107:11311 $>>$ \textasciitilde/.bashrc
+\item echo export ROS\_HOSTNAME=192.168.0.108 $>>$ \textasciitilde/.bashrc
+\end{itemize}
+Una vez hecho todo esto cerramos los terminales abiertos y reiniciamos las dos computadoras.\\
+En la PC del robot se debe configurar que al cerrar la tapa siga funcionando normalmente y no se suspenda el computador para ello, ingresamos a configuracion del sistema, opcion Energia y en la pestaña \textbf{Cuando la tapa esta cerrada}, escoger la opción \textbf{No hacer nada}.
+\begin{center}
+\includegraphics[width=12cm,height=6cm]{tapa.jpg}
+\end{center}
+Ahora encendemos el Kobuki, lo conectamos a la PC del robot, cerramos la tapa de la computadora y lo colocamos en un lugar seguro encima del robot.
+
+\begin{itemize}
+\item \textbf{Lanzar los nodos del turtleboot}
+\end{itemize}
+
+Para poder enviarle instrucciones al Turtlebot y recibir información de sus sensores y odo-
+metría se deben crear nodos de comunicación, con distintos topics y mensajes. Para lanzar los topics
+correspondientes a cada elemento hardware ejecutamos lo siguiente.\\
+Primero en la PC de trbajo ejecutaremos el comando \textbf{roscore}y en un nuevo terminal haremos la conexión SSH con la PC del robot.\\
+Una vez establecida la conexión, en la ventana de la PC del robot escribiremos lo siguiente:
+\begin{itemize}
+\item roslaunch turtlebot\_bringup minimal.launch $--$screen
+\item ls -n /dev $|$ grep kobuki
+\item sudo apt-get install ros-indigo-kobuki ros-indigo-kobuki-core
+
+\end{itemize}
+Si la vinculación ha sido realizada con éxito el robot producirá un sonido que indicará que los nodos han sido activados y la conexión robot/PC ha sido exitosa.\\
+Ejecutando el comando \textbf{rosnode list} se podra visualizar los nodos que están activos en el turtleboot\\
+Finalmente para teleoperarlo ejecutamos un comando desde la PC del trabajo, ejecutando la librería de teleoperación del turtleboot.
+\begin{itemize}
+\item roslaunch turtlebot\_teleop keyboard\_teleop.launch
+\end{itemize}
+\begin{center}
+\includegraphics[width=10cm,height=6cm]{teleop.jpg}
+\end{center}
+
+\end{itemize}
+
+
+\end{document}
