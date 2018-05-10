@@ -1,0 +1,131 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{graphicx}
+\author{Hector Mauricio Yepez Ponce}
+\date{17 de abril de 2018}
+\title{Instalación Kinect}
+\begin{document}
+\maketitle
+El robot Kobuki consta de una cámara Kinect xbox 360 modelo 1414, su función es permitir la visualización del ambiente en el que se encontrará el robot y permitirá realizar diferentes actividades como reconocimiento de objetos, mapeo, visión en 2D y 3D, para ello es necesario la instalación de un Driver y diferentes dependencias.
+Para el correcto funcionamiento del sensor Kinect en la plataforma ROS hay que tomar en cuenta varios aspectos importantes como lo es la versión del sistema operativo en el que se va ha realizar la instalación y por supuesto la versión ROS que le corresponda. \\\\
+Inicialmente se había instalado la versión de ROS \textit{Kinetic}, pero al momento de instalar se producen varios errores presentando incompatibilidad en diferentes archivos y por tanto un impedimento para visualizar la imagen. Debido a que los repositorios del sensor Kinect en la página de ROS están hasta una versión anterior (\textit{Indigo}) se decidió cambiar a la versión del sistema operativo de ambas computadoras a Ubuntu 14.04 que es compatible con ROS INDIGO.
+\begin{center}
+\includegraphics[width=8cm,height=4cm]{kinect.png}
+\end{center}
+
+\begin{center}
+\textbf{Dependencias necesarias para la instalación de Sensor Kinect}
+\end{center}
+
+\begin{itemize}
+\item \textbf{Compilador lenguaje Python}\\\\
+sudo apt-get install g++ python libusb-1.0-0-dev freeglut3-dev
+\item \textbf{Graph Visualization Software}\\\\
+sudo apt-get install doxygen graphviz mono-complete 
+\item \textbf{Plataforma de desarrollo de java Openjdk}\\\\
+sudo apt-get install openjdk-7-jdk
+\item \textbf{Open Natural Interaction OpenNi}.- Es una organización de software libre que permite la interoperabilidad entre una interfaz de usuario y dispositivos de interacción natural. \\
+Parte de esta organización lo conforma Primesense encargada de desarrollar la tecnología de la cámara Kinect que actúa como sensor de movimiento para la consola de video juego. Proporcionando 
+\begin{itemize}
+\item Reconocimiento de voz y comandos de voz.
+\item Gestos con la mano.
+\item Seguimiento de movimiento del cuerpo.
+\end{itemize}	
+Otro aspecto a tomar en cuenta es el modelo de la cámara Kinect con la que se está trabajando, En este caso es la Versión 1.0 por lo tanto se debera instalar el paquete de OpenNi caso contrario si la Versión es 2.0 se debe instalar las librerias de \textbf{freenect} o  la version de \textbf{OpenNi2}.\\
+Para la instalación se abre un terminal y se escriben los siguiente comandos.
+\begin{itemize}
+\item git clone https://github.com/OpenNI/OpenNI.git
+\item cd OpenNI
+\item git checkout Unstable-1.5.4.0
+\item cd Platform/Linux/CreateRedist
+\item sudo chmod +x RedistMaker
+\item ./RedistMaker
+\item cd ../Redist/OpenNI-Bin-Dev-Linux-[xxx]\\
+En \textit{xxx} se debe reemplazar por la versión de la PC 32 o 64 bits en este caso tanto la PC del robot como la PC remota son de 64 bits, el comando anterior quedaría de la siguiente manera:
+\item cd ../Redist/OpenNI-Bin-Dev-Linux-x64-v1.5.4.0
+\item sudo ./install.sh
+\end{itemize}
+
+\item \textbf{Driver Kinect}
+\begin{itemize}
+\item Abrir un terminal y se escriben los siguiente comandos.
+\item  git clone git://github.com/ph4m/SensorKinect.git
+\item  cd SensorKinect/Platform/Linux/CreateRedist
+\item  sudo chmod +x RedistMaker
+\item  ./RedistMaker
+\item  cd ../Redist/Sensor-Bin-Linux-x64-v5.1.2.1
+\item  sudo ./install.sh
+\item  sudo apt-get install ros-indigo-openni*
+\end{itemize}
+
+\item \textbf{NITE}.- Es un middleware de detección de movimiento.
+Abrir un terminal y se escriben los siguiente comandos.
+\begin{itemize}
+
+\item mkdir kinect
+\item cd \textasciitilde /kinect
+\item https://www.reddit.com/r/ROS/comments/6qejy0/openni\_kinect\_installation\_on\\\_kinetic\_indigo/
+\item wget http://www.openni.ru/wp-content/uploads/2013/10/NITE-Bin-Linux-x64-\\v1.5.2.23.tar.zip
+\item cd NITE-Bin-Dev-Linux-x64-v1.5.2.23
+\item sudo ./install.sh\\
+Para la correcta instalación es necesario colocar la licencia de NITE esto se realiza de la siguiente manera:\\
+Abre el directorio donde esta ubicado en este caso /kinect/ NITE-Bin-Dev-Linux\\-x64-v1.5.2.23/Data, en esa carpeta existen tres archivos los cuales se los abre con cualquier editor de texto y se reemplaza el siguiente texto:\\
+\item \textit{vendor="PrimeSense" key="key here="} por 
+\begin{center}
+\includegraphics[width=10cm,height=6cm]{key1.png}
+\end{center}
+\item \textit{vendor="PrimeSense" key="0KOIk2JeIBYClPWVnMoRKn5cdY4="}\\
+\begin{center}
+\includegraphics[width=10cm,height=6cm]{key2.jpg}
+\end{center}
+Instalamos la licencia
+\item niLicense PrimeSense 0KOIk2JeIBYClPWVnMoRKn5cdY4=
+\item niLicense -l\\
+Ahora en el terminal se desactiva los siguientes módulos para que no presenten un error al abrir OpenNI
+\item sudo modprobe -r gspca\_main 
+\item sudo modprobe -r gspca\_kinect\\
+Configuramos el tipo de sensor 3D, ejecutamos en el terminal lo siguiente:
+\item echo \$TURTLEBOT\_3D\_SENSOR
+\item echo "export TURTLEBOT\_3D\_SENSOR=kinect" $>>$.bashrc
+\item sudo apt-get install ros-indigo-kobuki ros-indigo-kobuki-core\\
+\end{itemize}
+Finalmente para verificar si la cámara esta funcionando ejecutamos los siguientes comandos cerramos el terminal abierto y abrimos uno nuevo\\
+\begin{itemize}
+\item roscore
+\item roslaunch turtlebot\_bringup minimal.launch $--$screen
+\item roslaunch openni\_launch openni.launch\\
+En un terminal nuevo:
+\item rosrun image\_view image\_view image:=/camera/rgb/image\_color
+\begin{center}
+\includegraphics[width=10cm,height=6cm]{camara.jpg}
+\end{center}
+\end{itemize}
+Por lo general se producen dos errores comunes:
+\begin{itemize}
+\item $[..]$No devices connected.... waiting for devices to be connected....
+\end{itemize}
+Esto se debe a que el puerto al que debe estar conectado la cámara es USB 2.0 unicamente.
+\begin{itemize}
+\item $[..]$Open failed: USB interface is not supported!
+\end{itemize}
+\begin{center}
+\includegraphics[width=10cm,height=6cm]{error1.jpg}
+\end{center}
+El siguiente error se debe a que por defecto la cámara se conecta al UsbInterface incorrecto por lo tanto se debe escribir en un terminal lo siguiente:
+\begin{itemize}
+\item sudo gedit /usr/etc/primesense/GlobalDefaultsKinect.ini
+\end{itemize}
+y cambiar \textit{UsbInterface=2} por \textit{UsbInterface=1}.\\
+Guardar y Cerrar el editor de texto.\\
+\begin{center}
+\includegraphics[width=8cm,height=8cm]{usb1.jpg}
+\end{center}
+
+\end{itemize}
+
+\end{document}
