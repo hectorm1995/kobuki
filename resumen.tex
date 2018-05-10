@@ -1,0 +1,79 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage{graphicx}
+\author{Hector Mauricio Yepez Ponce}
+\date{2 de mayo de 2018}
+\title{Algoritmos de Detección de Fronteras en el Área de exploración y SLAM para robot móviles}
+\begin{document}
+\maketitle
+Los desafíos que se han presentado en el área de exploración en robots móviles son: Navegación, localizacion simultánea y mapeo (SLAM), comunicación eficiente entre robots y durante el menor tiempo posible.
+Los Algortimos basados en SLAM juegan un papel importante al momento de mejorar la exactitud y eficiencia en el proceso de mapeo y posteriormente útil para la exploración.
+El problema de SLAM en los robótica móvil consiste en construir un mapa del entorno y localizar el robot dentro del mapa construido a través de modelos probabilísticos, ésto producirá un efecto directo al movimiento del robot.
+Por lo tanto el próposito de un algoritmo de detección de fronteras es localizar un objetivo en una región y mediante su implementación pueda llegar a esa localización. Es por eso que el algortimo debe realizar una selección de células fronterizas que le permitan llegar a esa posición realizando una cantidad de movimientos minimos.\\
+Todo esto se lo realiza con la finalidad de implementar este tipo de algoritmos en robots espaciales, operaciones militares y manejo de desastres.
+\begin{center}
+\textbf{MÉTODOS BASADOS EN DETECCIÓN DE FRONTERAS}
+\end{center}
+\begin{itemize}
+\item
+\textbf{Detección de Fronteras para buscar un objetivo}
+
+En este algoritmo se implementa una cuadrícula de ocupación de forma hexagonal, de modo que el robot puede alcanzar todas las cuadrículas vecinas en un paso de la misma longitud. 
+La manera en la cual el algoritmo determina la trayectoria mas eficiente es por medio de calculos de celdas ocupadas, celdas disponibles y la menor distancia entre el robot y su objetivo, de esta manera realiza una cantidad de movimientos mínimos.
+\item
+\textbf{Método de partición circular}
+
+Consiste en dos pasos: El primero es tomar como referencia un círculo al área de exploración y dividirlo dependiendo el número de robots que están disponibles.
+En el segundo paso cada robot comienza a desplazarse por toda la subregión formada hasta que logre cubrir todas las celdas fronterizas y para cubrir toda el área utiliza un algoritmo de planificación de ruta.
+
+\item
+\textbf{Exploración multirobot usando fronteras pruning}
+
+Este algoritmo utiliza el algortimo K-means para la distribución de subregiones en el área y también el método húngaro para la asignación de robots en cada subregión. Mediante este algoritmo lo que se busca es reducir el tiempo de computación, para ello analiza el tiempo total de exploración y el número de movimientos realizados.
+También está demostrado que utilizando este algoritmo el tiempo necesario para cubrir la región disminuye con un aumento en el número de robots. Este método no requiere ninguna coordinación explícita o sincronización entre robots.
+
+Se puede aplicar mejor en operaciones de búsqueda y rescate, la partición ayuda a explorar diferentes regiones del espacio de trabajo de forma paralela por diferentes robots en lugar de concentrar los esfuerzos en un punto específico, Pruning ayuda a tomar decisiones de movimiento mucho más rápido, el resultado es que las víctimas potenciales en una región no tendrán que esperar mucho más.
+
+\item
+\textbf{MinPos}
+
+El algoritmo propuesto se basa en el concepto de posición de un robot hacia un
+frontera, evalua la posición de los robots más cercanos para que puedan compartir su ubicación y mapas locales. Cada robot decide de forma autónoma qué frontera explorará a continuación.
+Las medidas de rendimiento en simulación  en este algortimo es que son más eficientes en el tiempo de exploración total. Funciona mejor que una asignación de frontera de utilidad cuando el número de robots es pequeño y tiene un rendimiento similar cuando crece la cantidad de robots. Además, el algoritmo MinPos tiene una complejidad menor en relación a otros algoritmos y no requiere calcular de antemano una ruta de cada robot en cada frontera. De hecho, las distancias a las fronteras se calculan utilizando una propagación de frente de onda iniciada desde las fronteras, independientemente del número de robots.
+
+\item
+\textbf{Detección rápida de fronteras (BFS)}
+
+La mayoría de los algoritmos de exploración de área, basados en frontera necesitan tener un mapa completo de datos durante la exploración, lo que aumentará el tiempo de cálculo y el tamaño de la memoria.
+Este algoritmo toma como referencia solo las regiones conocidas, las escanea y pone en cola las celdas conocidas en la estructura de datos. La ventaja de este algoritmo es que el tiempo de exploración se puede reducir significativamente.
+\end{itemize}
+\begin{center}
+\textbf{Localización y Mapeo Simultáneo (SLAM)}
+\end{center}
+Es una técnica usada por robots y vehículos autónomos para construir un mapa de un entorno desconocido y a la vez estima su trayectoria al desplazarse dentro de este entorno.
+La precisión, la tolerancia al ruido, el tipo de entorno del robot y el número sensores que puedan trabajar condiciona en el desarrollo del modelo matemático que se usa para buscar una solución al problema del SLAM.\\
+El problema de SLAM resulta complejo por el hecho que para poder localizarse de forma precisa se necesita un mapa, y por otro lado, para poder crear un mapa es menester estar localizado en forma precisa.\\
+Las investigaciones de SLAM empezaron desde hace 25 años y se basan en enfoque probabilisticos que han desarrollado varios métodos como son:
+Filtros de Kalman, (KF), Filtros de Partiulas  (PF) y Maximización de expectativas (EM), la razón por la que se basa en probabilidad es debido a la incertidumbre y el ruido en los sensores. \\
+El teorema de Bayes es el principio probabilístico en el cual se basan estas técnicas que principalmente consiste en determinar cual es la probabilidad en que un suceso \textbf{A} ocurra con respecto a otro suceso \textbf{B} del cual se conoce su información.
+\begin{itemize}
+\item {Filtro de Kalaman}
+Es un filtro muy eficiente en predecir y estimar estados con un mínimo ruido, el algoritmo funciona como un proceso en dos fases: en la fase de predicción, el filtro de Kalman usa parámetros que pueden ser medidos, estimaciones del estado actual de las variables, junto a incertidumbres y  así lograr predecir el estado deseado. Una vez capturada la salida del siguiente estado, el filtro actualiza sus estimaciones utlizando una media ponderada, con mayor peso a las predicciones con un mayor nivel de certeza. Por lo cual usa los filtros de bayes y también una distribución Gaussiana que de como resultado una covarianza pequeña y con un mínimo error. 
+
+\item {Filtro de Partículas}
+
+Esta basado en el método de Monte Carlo el cual por medio de puntos repartidos de forma aleatoria, logran representar una probabilidad posterior, es un método empleado para estimar el estado de un sistema que cambia a lo largo del tiempo.  Básicamente, el filtro de partículas se compone de un conjunto de muestras (las partículas) y unos valores, o pesos, asociados a cada una de esas muestras. Las partículas son estados posibles del proceso, que se pueden representar como puntos en el espacio de estados de dicho proceso.
+
+\item {Métodos basados en la maximización de expectativas}
+
+Estos métodos estan basados en la máxima estimación probabilística por lo que es una opción ideal para la construcción de mapas. Pero no muestra esa efectividad para la localización.
+Es por eso que para la construcción de un mapa se utiliza este método y para la localización se ocupa un Filtro de Particulas.
+\end{itemize}
+
+
+\end{document}
